@@ -18,42 +18,48 @@ def post_detail(request, pk):
 
 
 def post_new(request):
-    if request.method == "POST":
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.published_date = timezone.now()
-            post.save()
-            return redirect('post_detail', pk=post.pk)
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            form = PostForm(request.POST)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.author = request.user
+                post.published_date = timezone.now()
+                post.save()
+                return redirect('post_detail', pk=post.pk)
+        else:
+            form = PostForm()
+        return render(request, 'blog/post_edit.html', {'form': form})
     else:
-        form = PostForm()
-    return render(request, 'blog/post_edit.html', {'form': form})
+        return render(request, 'blog/403.html')
 
 
 def post_edit(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    if request.method == "POST":
-        form = PostForm(request.POST, instance=post)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.published_date = timezone.now()
-            post.save()
-            return redirect('post_detail', pk=post.pk)
+    if request.user.is_authenticated:
+        post = get_object_or_404(Post, pk=pk)
+        if request.method == "POST":
+            form = PostForm(request.POST, instance=post)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.author = request.user
+                post.published_date = timezone.now()
+                post.save()
+                return redirect('post_detail', pk=post.pk)
+        else:
+            form = PostForm(instance=post)
+        return render(request, 'blog/post_edit.html', {'form': form})
     else:
-        form = PostForm(instance=post)
-    return render(request, 'blog/post_edit.html', {'form': form})
+        return render(request, 'blog/403.html')
 
 
 def post_delete(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    try:
-        post.delete()
-    except Exception as e:
-        print(e)
-    return redirect('post_list')
+    if request.user.is_authenticated:
+        post = get_object_or_404(Post, pk=pk)
+        try:
+            post.delete()
+        except Exception as e:
+            print(e)
+        return redirect('post_list')
+    else:
+        return render(request, 'blog/403.html')
 
-
-def hello(request):
-    return render(request, 'blog/hello.html', {})
