@@ -44,5 +44,14 @@ def post_edit(request, pk):
     return render(request, 'blog/post_edit.html', {'form': form})
 
 
+def post_delete(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    try:
+        post.delete()
+    except Exception as e:
+        print(e)
+    return redirect('post_list')
+
+
 def hello(request):
     return render(request, 'blog/hello.html', {})
