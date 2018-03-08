@@ -1,0 +1,12 @@
+{% load staticfiles %}
+<html>
+    <head>
+        <title>Adminpanel</title>
+        <link rel="stylesheet" href="{% static 'css/adminpanel.css' %}">
+    </head>
+    <body>
+        <div><p><a href="{% url 'index_view' %}">ADMINPANEL</a></p></div>
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>

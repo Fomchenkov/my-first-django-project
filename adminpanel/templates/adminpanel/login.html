@@ -1,0 +1,14 @@
+{% extends 'adminpanel/base.html' %}
+
+{% block content %}
+<div>
+	<p>Login Form</p>
+	{% if message %}
+		<p>{{ message }}</p>
+	{% endif %}
+	<form method="POST">{% csrf_token %}
+		{{ form.as_p }}
+		<button type="submit">Login</button>
+	</form>
+</div>
+{% endblock %}

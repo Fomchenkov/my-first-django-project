@@ -1,0 +1,11 @@
+{% extends 'adminpanel/base.html' %}
+
+{% block content %}
+<div>
+	<p>Register Form</p>
+	<form method="POST">{% csrf_token %}
+		{{ form.as_p }}
+		<button type="submit">Register</button>
+	</form>
+</div>
+{% endblock %}
